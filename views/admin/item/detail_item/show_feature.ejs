@@ -1,0 +1,95 @@
+<!-- DataTales Example -->
+<div class="tab-pane fade show active" id="show-feature" role="tabpanel" aria-labelledby="show-item-tab">
+    <div class="card shadow mb-4 mt-2">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-12">
+                            <form action="/admin/item/add/feature/" method="POST" enctype="multipart/form-data">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="name">Name</label>
+                                                    <input type="text" class="form-control" id="name" name="name"
+                                                        placeholder="Enter name" required />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="qty">QTY</label>
+                                                    <input type="number" class="form-control" id="qty" name="qty"
+                                                        placeholder="Enter qty" required />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="image">Image</label>
+                                                    <input type="file" class="form-control pt-1" id="image" name="image"
+                                                        required />
+                                                    <small class="text-muted">
+                                                        Upload 1 File
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-2 mb-lg-2">
+                                                <input type="hidden" name="itemId" value="<%= itemId %>">
+                                                <button type="submit" class="btn btn-success w-50 float-md-right">
+                                                    Save
+                                                </button>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <a href="/admin/item" class="btn btn-dark w-50 float-md-left">Back</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="table-responsive mt-2">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Name</th>
+                                    <th>Qty</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for(let i = 0; i < feature.length; i++) {%>
+                                <tr>
+                                    <td><%= i +1 %> </td>
+                                    <td><%= feature[i].name %></td>
+                                    <td><%= feature[i].qty %></td>
+
+                                    <td>
+                                        <form action="/admin/item/<%= feature[i].id %>?_method=DELETE" method="POST">
+                                            <a href="/admin/feature/show-image/<%= feature[i].id %>"
+                                                class="btn btn-info btn-circle btn-sm"><i class="fas fa-image"></i></a>
+                                            <a href="/admin/feature/<%= feature[i].id %>"
+                                                class="btn btn-warning btn-circle btn-sm"><i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="submit" class="btn btn-danger btn-circle btn-sm"><i
+                                                    class="fas fa-trash"></i>
+                                            </button>
+                                            <a href="/admin/feature/show-detail-feature/<%= feature[i].id %>"
+                                                class="btn btn-success btn-circle btn-sm"><i
+                                                    class="fas fa-info"></i></a>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

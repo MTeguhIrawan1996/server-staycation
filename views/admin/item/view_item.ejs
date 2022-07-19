@@ -1,0 +1,108 @@
+<%- include('../../partials/header.ejs') %>
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <%- include('../../partials/sidebar.ejs') %>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+            <%- include('../../partials/navbar.ejs') %>
+
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+                <%- include('../../partials/message.ejs') %>
+                <h1 class="h3 mb-4 text-gray-800">Item</h1>
+
+                <!-- Page Heading -->
+                <% if(action ==='view') { %>
+
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="show-item-tab" data-toggle="tab" href="#show-item" role="tab"
+                            aria-controls="show-item" aria-selected="true">Show Item</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="add-item-tab" data-toggle="tab" href="#add-item" role="tab"
+                            aria-controls="add-item" aria-selected="false">Add Item</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <%- include('show_table.ejs') %>
+                    <%- include('add_item.ejs') %>
+                </div>
+                <% } else if (action == 'show image') {%>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="show-image-tab" data-toggle="tab" href="#show-image" role="tab"
+                            aria-controls="show-image" aria-selected="true">Show Image</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="show-image-feature-tab" data-toggle="tab" href="#show-image-feature"
+                            role="tab" aria-controls="show-image-feature" aria-selected="true">Image Feature</a>
+                    </li>
+                </ul>
+
+
+                <div class="tab-content" id="myTabContent">
+                    <%- include('show_image.ejs') %>
+                    <%- include('show_image_feature.ejs') %>
+                </div>
+                <% }  else {%>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="show-edit-item-tab" data-toggle="tab" href="#edit-item"
+                            role="tab" aria-controls="show-edit-item" aria-selected="true">Edit Item</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <%- include('edit_item.ejs') %>
+                </div>
+                <% } %>
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <%- include('../../partials/footer.ejs') %>
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="/sb-admin2/login.html">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('../../partials/js.ejs') %>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+</script>
