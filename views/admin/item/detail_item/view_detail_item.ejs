@@ -73,10 +73,22 @@
     </div>
 </div>
 <%- include('../../../partials/js.ejs') %>
+<%- include('show_modal_feature.ejs') %>
+
 <script>
     $(document).ready(function () {
         $('#dataTableActivity').DataTable();
     })
     ClassicEditor
         .create(document.querySelector('#editor'))
+
+    $('#dataTable').on('click', '.button-update', function () {
+        let id = $(this).data('id');
+        let name = $(this).data('name');
+        let qty = $(this).data('qty');
+        $('#editModal').modal('show');
+        $('.id').val(id);
+        $('.name').val(name);
+        $('.qty').val(qty);
+    })
 </script>

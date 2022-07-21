@@ -69,18 +69,17 @@
                                     <td><%= feature[i].qty %></td>
 
                                     <td>
-                                        <form action="/admin/item/<%= feature[i].id %>?_method=DELETE" method="POST">
-                                            <a href="/admin/feature/show-image/<%= feature[i].id %>"
-                                                class="btn btn-info btn-circle btn-sm"><i class="fas fa-image"></i></a>
-                                            <a href="/admin/feature/<%= feature[i].id %>"
-                                                class="btn btn-warning btn-circle btn-sm"><i class="fas fa-edit"></i>
+                                        <form
+                                            action="/admin/item/<%= itemId %>/feature/<%= feature[i].id %>?_method=DELETE"
+                                            method="POST">
+                                            <a href="javascript:void()" type="button"
+                                                class="btn btn-warning btn-circle btn-sm button-update"
+                                                data-id="<%= feature[i].id %>" data-name="<%= feature[i].name %>"
+                                                data-qty="<%= feature[i].qty %>"><i class="fas fa-edit"></i>
                                             </a>
                                             <button type="submit" class="btn btn-danger btn-circle btn-sm"><i
                                                     class="fas fa-trash"></i>
                                             </button>
-                                            <a href="/admin/feature/show-detail-feature/<%= feature[i].id %>"
-                                                class="btn btn-success btn-circle btn-sm"><i
-                                                    class="fas fa-info"></i></a>
                                         </form>
                                     </td>
                                 </tr>

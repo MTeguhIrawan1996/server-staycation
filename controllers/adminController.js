@@ -383,8 +383,14 @@ module.exports = {
       const category = await Category.findOne({
         _id: item.categoryId,
       });
-      await category.itemId.splice(category.itemId.indexOf(item._id), 1);
+      // await category.itemId.splice(category.itemId.indexOf(item._id), 1);
+      await category.itemId.pull({ _id: item._id });
       await category.save();
+      const feature = await Feature.findOne({ _id: item.featureId });
+      if (feature) {
+        removeImage(feature.imageUrl);
+        await feature.remove();
+      }
       await item.remove();
       req.flash("alertMessage", "Success delete Item");
       req.flash("alertStatus", "success");
@@ -433,6 +439,62 @@ module.exports = {
       item.featureId.push({ _id: feature._id });
       await item.save();
       req.flash("alertMessage", "Success add feature");
+      req.flash("alertStatus", "success");
+      res.redirect(`/admin/item/show-detail-item/${itemId}`);
+    } catch (error) {
+      req.flash("alertMessage", `${error.message}`);
+      req.flash("alertStatus", "danger");
+      res.redirect(`/admin/item/show-detail-item/${itemId}`);
+    }
+  },
+  editFeature: async (req, res) => {
+    const { id, name, qty, itemId } = req.body;
+    try {
+      const feature = await Feature.findOne({ _id: id });
+      if (req.file === undefined) {
+        feature.name = name;
+        feature.qty = qty;
+        await feature.save();
+        req.flash("alertMessage", "Success update feature");
+        req.flash("alertStatus", "success");
+        res.redirect(`/admin/item/show-detail-item/${itemId}`);
+      } else {
+        if (req.file.size > 1 * 1024 * 1024) {
+          removeImage(`images/${req.file.filename}`);
+          req.flash("alertMessage", "Worng Image Size");
+          req.flash("alertStatus", "danger");
+          res.redirect(`/admin/item/show-detail-item/${itemId}`);
+        } else {
+          removeImage(feature.imageUrl);
+          feature.name = name;
+          feature.qty = qty;
+          feature.imageUrl = `images/${req.file.filename}`;
+          await feature.save();
+          req.flash("alertMessage", "Success update feature");
+          req.flash("alertStatus", "success");
+          res.redirect(`/admin/item/show-detail-item/${itemId}`);
+        }
+      }
+    } catch (error) {
+      req.flash("alertMessage", `${error.message}`);
+      req.flash("alertStatus", "danger");
+      res.redirect(`/admin/item/show-detail-item/${itemId}`);
+    }
+  },
+  deleteFeature: async (req, res) => {
+    const { id, itemId } = req.params;
+    try {
+      const feature = await Feature.findOne({ _id: id });
+      const item = await Item.findOne({ _id: itemId }).populate("featureId");
+      for (let i = 0; i < item.featureId.length; i++) {
+        if (item.featureId[i]._id.toString() === feature._id.toString()) {
+          await item.featureId.pull({ _id: feature._id });
+          await item.save();
+        }
+      }
+      removeImage(feature.imageUrl);
+      await feature.remove();
+      req.flash("alertMessage", "Success delete Feature");
       req.flash("alertStatus", "success");
       res.redirect(`/admin/item/show-detail-item/${itemId}`);
     } catch (error) {

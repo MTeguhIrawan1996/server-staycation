@@ -2,6 +2,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 // import uuid from "uuid/v4";
+const maxSize = 1 * 1024 * 1024; /* 1mb */
 
 const storageMultiple = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -34,7 +35,7 @@ const uploadMultiple = multer({
 
 const upload = multer({
   storage: storage,
-  // limits: { fileSize: 5000000 },
+  // limits: { fileSize: maxSize },
   fileFilter: function (req, file, cb) {
     checkFileType(file, cb);
   },
@@ -52,7 +53,8 @@ function checkFileType(file, cb) {
   if (mimeType && extName) {
     return cb(null, true);
   } else {
-    cb("Error: Images Only !!!");
+    cb(null, false);
+    return cb(new Error("Images Only !!!"));
   }
 }
 
