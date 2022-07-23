@@ -3,6 +3,7 @@ const Bank = require("../models/Bank");
 const Item = require("../models/Item");
 const Image = require("../models/Image");
 const Feature = require("../models/Feature");
+const Activity = require("../models/Activity");
 const fs = require("fs-extra");
 const path = require("path");
 
@@ -231,6 +232,7 @@ module.exports = {
         select: "id imageUrl",
       });
       const feature = await Feature.find({ itemId: id });
+      const activity = await Activity.find({ itemId: id });
       const alertMessage = req.flash("alertMessage");
       const alertStatus = req.flash("alertStatus");
       const alert = {
@@ -244,6 +246,7 @@ module.exports = {
         alert,
         action: "show image",
         feature,
+        activity,
       });
     } catch (error) {
       req.flash("alertMessage", `${error.message}`);
@@ -371,7 +374,9 @@ module.exports = {
         .populate({
           path: "categoryId",
           select: "id name",
-        });
+        })
+        .populate("featureId")
+        .populate("activityId");
       for (let i = 0; i < item.imageId.length; i++) {
         const imageUpdate = await Image.findOne({
           _id: item.imageId[i].id,
@@ -379,6 +384,7 @@ module.exports = {
         removeImage(imageUpdate.imageUrl);
         await imageUpdate.remove();
       }
+
       // Set category Menjadi Kosong berdasarkan id
       const category = await Category.findOne({
         _id: item.categoryId,
@@ -386,10 +392,18 @@ module.exports = {
       // await category.itemId.splice(category.itemId.indexOf(item._id), 1);
       await category.itemId.pull({ _id: item._id });
       await category.save();
-      const feature = await Feature.findOne({ _id: item.featureId });
-      if (feature) {
+
+      for (let i = 0; i < item.featureId.length; i++) {
+        const feature = await Feature.findOne({ _id: item.featureId[i]._id });
         removeImage(feature.imageUrl);
         await feature.remove();
+      }
+      for (let i = 0; i < item.activityId.length; i++) {
+        const activity = await Activity.findOne({
+          _id: item.activityId[i]._id,
+        });
+        removeImage(activity.imageUrl);
+        await activity.remove();
       }
       await item.remove();
       req.flash("alertMessage", "Success delete Item");
@@ -412,12 +426,14 @@ module.exports = {
       };
       // Tampilkan feature berdasarkan item id di Parameter
       const feature = await Feature.find({ itemId: itemId });
+      const activity = await Activity.find({ itemId: itemId });
       res.render("admin/item/detail_item/view_detail_item", {
         page: "Item",
         title: "Stycation | Detail Item",
         alert,
         itemId,
         feature,
+        activity,
       });
     } catch (error) {
       req.flash("alertMessage", `${error.message}`);
@@ -425,6 +441,8 @@ module.exports = {
       res.redirect(`/admin/item/show-detail-item/${itemId}`);
     }
   },
+
+  // CRUD FEATURE
   addFeature: async (req, res) => {
     const { name, qty, itemId } = req.body;
     try {
@@ -433,14 +451,15 @@ module.exports = {
         req.flash("alertMessage", "Image not found");
         req.flash("alertStatus", "danger");
         res.redirect(`/admin/item/show-detail-item/${itemId}`);
+      } else {
+        const feature = await Feature.create({ name, qty, itemId, imageUrl });
+        const item = await Item.findOne({ _id: itemId });
+        item.featureId.push({ _id: feature._id });
+        await item.save();
+        req.flash("alertMessage", "Success add feature");
+        req.flash("alertStatus", "success");
+        res.redirect(`/admin/item/show-detail-item/${itemId}`);
       }
-      const feature = await Feature.create({ name, qty, itemId, imageUrl });
-      const item = await Item.findOne({ _id: itemId });
-      item.featureId.push({ _id: feature._id });
-      await item.save();
-      req.flash("alertMessage", "Success add feature");
-      req.flash("alertStatus", "success");
-      res.redirect(`/admin/item/show-detail-item/${itemId}`);
     } catch (error) {
       req.flash("alertMessage", `${error.message}`);
       req.flash("alertStatus", "danger");
@@ -497,6 +516,43 @@ module.exports = {
       req.flash("alertMessage", "Success delete Feature");
       req.flash("alertStatus", "success");
       res.redirect(`/admin/item/show-detail-item/${itemId}`);
+    } catch (error) {
+      req.flash("alertMessage", `${error.message}`);
+      req.flash("alertStatus", "danger");
+      res.redirect(`/admin/item/show-detail-item/${itemId}`);
+    }
+  },
+
+  // CRUD ACTIVITY
+  addActivity: async (req, res) => {
+    const { name, type, itemId } = req.body;
+    const imageUrl = `images/${req.file.filename}`;
+    try {
+      if (!req.file) {
+        req.flash("alertMessage", "Image not found");
+        req.flash("alertStatus", "danger");
+        res.redirect(`/admin/item/show-detail-item/${itemId}`);
+      } else {
+        if (req.file.size > 1 * 1024 * 1024) {
+          removeImage(`images/${req.file.filename}`);
+          req.flash("alertMessage", "Worng Image Size");
+          req.flash("alertStatus", "danger");
+          res.redirect(`/admin/item/show-detail-item/${itemId}`);
+        } else {
+          const activity = await Activity.create({
+            name,
+            type,
+            itemId,
+            imageUrl,
+          });
+          const item = await Item.findOne({ _id: itemId });
+          item.activityId.push({ _id: activity._id });
+          await item.save();
+          req.flash("alertMessage", "Success add activity");
+          req.flash("alertStatus", "success");
+          res.redirect(`/admin/item/show-detail-item/${itemId}`);
+        }
+      }
     } catch (error) {
       req.flash("alertMessage", `${error.message}`);
       req.flash("alertStatus", "danger");

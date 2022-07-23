@@ -44,12 +44,15 @@
                         <a class="nav-link" id="show-image-feature-tab" data-toggle="tab" href="#show-image-feature"
                             role="tab" aria-controls="show-image-feature" aria-selected="true">Image Feature</a>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="show-image-activity-tab" data-toggle="tab" href="#show-image-activity"
+                            role="tab" aria-controls="show-image-activity" aria-selected="true">Image Activity</a>
+                    </li>
                 </ul>
-
-
                 <div class="tab-content" id="myTabContent">
                     <%- include('show_image.ejs') %>
                     <%- include('show_image_feature.ejs') %>
+                    <%- include('show_image_activity.ejs') %>
                 </div>
                 <% }  else {%>
                 <ul class="nav nav-tabs" id="myTab" role="tablist">

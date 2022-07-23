@@ -6,7 +6,7 @@
                 <div class="col-md-5">
                     <div class="row">
                         <div class="col-12">
-                            <form action="/admin/item" method="POST" enctype="multipart/form-data">
+                            <form action="/admin/item/add/activity/" method="POST" enctype="multipart/form-data">
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="row">
@@ -20,7 +20,7 @@
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="type">Type</label>
-                                                    <input type="number" class="form-control" id="type" name="type"
+                                                    <input type="text" class="form-control" id="type" name="type"
                                                         placeholder="Enter type" required />
                                                 </div>
                                             </div>
@@ -34,10 +34,14 @@
                                                     </small>
                                                 </div>
                                             </div>
-                                            <div class="col">
-                                                <button type="submit" class="btn btn-success px-5">
+                                            <div class="col-md-6 mb-2 mb-lg-2">
+                                                <input type="hidden" name="itemId" value="<%= itemId %>">
+                                                <button type="submit" class="btn btn-success w-50 float-md-right">
                                                     Save
                                                 </button>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <a href="/admin/item" class="btn btn-dark w-50 float-md-left">Back</a>
                                             </div>
                                         </div>
                                     </div>
@@ -54,12 +58,32 @@
                                     <th>No</th>
                                     <th>Name</th>
                                     <th>Type</th>
-                                    <th>Image Url</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                <% for(let i = 0; i < activity.length; i++) {%>
+                                <tr>
+                                    <td><%= i +1 %> </td>
+                                    <td><%= activity[i].name %></td>
+                                    <td><%= activity[i].type %></td>
 
+                                    <td>
+                                        <form
+                                            action="/admin/item/<%= itemId %>/activity/<%= activity[i].id %>?_method=DELETE"
+                                            method="POST">
+                                            <a href="javascript:void()" type="button"
+                                                class="btn btn-warning btn-circle btn-sm button-update"
+                                                data-id="<%= activity[i].id %>" data-name="<%= activity[i].name %>"
+                                                data-qty="<%= activity[i].qty %>"><i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="submit" class="btn btn-danger btn-circle btn-sm"><i
+                                                    class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <% } %>
                             </tbody>
                         </table>
                     </div>
