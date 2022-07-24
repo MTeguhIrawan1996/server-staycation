@@ -14,10 +14,14 @@ const removeImage = (filePath) => {
 
 module.exports = {
   viewDashboard: (req, res) => {
-    res.render("admin/dashboard/view_dashboard", {
-      page: "Dashboard",
-      title: "Stycation | Dashboard",
-    });
+    try {
+      console.log(req.session);
+      res.render("admin/dashboard/view_dashboard", {
+        page: "Dashboard",
+        title: "Stycation | Dashboard",
+        user: req.session.user,
+      });
+    } catch (error) {}
   },
 
   // Category CRUD
@@ -35,6 +39,7 @@ module.exports = {
         alert,
         title: "Stycation | Category",
         page: "Category",
+        user: req.session.user,
       });
     } catch (error) {
       res.redirect("/admin/category");
@@ -98,6 +103,7 @@ module.exports = {
         alert,
         page: "Bank",
         title: "Stycation | Bank",
+        user: req.session.user,
       });
     } catch (error) {
       res.redirect("/admin/bank");
@@ -185,6 +191,7 @@ module.exports = {
         alert,
         item,
         action: "view",
+        user: req.session.user,
       });
     } catch (error) {
       req.flash("alertMessage", `${error.message}`);
@@ -247,6 +254,7 @@ module.exports = {
         action: "show image",
         feature,
         activity,
+        user: req.session.user,
       });
     } catch (error) {
       req.flash("alertMessage", `${error.message}`);
@@ -281,6 +289,7 @@ module.exports = {
         alert,
         category,
         action: "edit",
+        user: req.session.user,
       });
     } catch (error) {
       req.flash("alertMessage", `${error.message}`);
@@ -434,6 +443,7 @@ module.exports = {
         itemId,
         feature,
         activity,
+        user: req.session.user,
       });
     } catch (error) {
       req.flash("alertMessage", `${error.message}`);
@@ -559,11 +569,68 @@ module.exports = {
       res.redirect(`/admin/item/show-detail-item/${itemId}`);
     }
   },
+  editActivity: async (req, res) => {
+    const { id, name, type, itemId } = req.body;
+    try {
+      const activity = await Activity.findOne({ _id: id });
+      if (req.file === undefined) {
+        activity.name = name;
+        activity.type = type;
+        await activity.save();
+        req.flash("alertMessage", "Success update activity");
+        req.flash("alertStatus", "success");
+        res.redirect(`/admin/item/show-detail-item/${itemId}`);
+      } else {
+        if (req.file.size > 1 * 1024 * 1024) {
+          removeImage(`images/${req.file.filename}`);
+          req.flash("alertMessage", "Worng Image Size");
+          req.flash("alertStatus", "danger");
+          res.redirect(`/admin/item/show-detail-item/${itemId}`);
+        } else {
+          removeImage(activity.imageUrl);
+          activity.name = name;
+          activity.type = type;
+          activity.imageUrl = `images/${req.file.filename}`;
+          await activity.save();
+          req.flash("alertMessage", "Success update activity");
+          req.flash("alertStatus", "success");
+          res.redirect(`/admin/item/show-detail-item/${itemId}`);
+        }
+      }
+    } catch (error) {
+      req.flash("alertMessage", `${error.message}`);
+      req.flash("alertStatus", "danger");
+      res.redirect(`/admin/item/show-detail-item/${itemId}`);
+    }
+  },
+  deleteActivity: async (req, res) => {
+    const { id, itemId } = req.params;
+    try {
+      const activity = await Activity.findOne({ _id: id });
+      const item = await Item.findOne({ _id: itemId }).populate("activityId");
+      for (let i = 0; i < item.activityId.length; i++) {
+        if (item.activityId[i]._id.toString() === activity._id.toString()) {
+          await item.activityId.pull({ _id: activity._id });
+          await item.save();
+        }
+      }
+      removeImage(activity.imageUrl);
+      await activity.remove();
+      req.flash("alertMessage", "Success delete Activity");
+      req.flash("alertStatus", "success");
+      res.redirect(`/admin/item/show-detail-item/${itemId}`);
+    } catch (error) {
+      req.flash("alertMessage", `${error.message}`);
+      req.flash("alertStatus", "danger");
+      res.redirect(`/admin/item/show-detail-item/${itemId}`);
+    }
+  },
 
   viewBooking: (req, res) => {
     res.render("admin/booking/view_booking", {
       page: "Booking",
       title: "Stycation | Booking",
+      user: req.session.user,
     });
   },
 };
