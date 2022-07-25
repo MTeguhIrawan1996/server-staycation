@@ -6,6 +6,7 @@ var logger = require("morgan");
 const methodOverride = require("method-override");
 const session = require("express-session");
 const flash = require("connect-flash");
+const moment = require("moment");
 
 // Import Mongoose
 const mongoose = require("mongoose");
@@ -36,6 +37,10 @@ app.use(
     cookie: { maxAge: oneDay },
   })
 );
+app.use((req, res, next) => {
+  res.locals.moment = moment;
+  next();
+});
 app.use(flash());
 app.use(logger("dev"));
 app.use(express.json());
