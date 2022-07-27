@@ -3,6 +3,15 @@ const Treasure = require("../models/Activity");
 const Traveler = require("../models/Booking");
 const Category = require("../models/Category");
 const Testimonial = require("../models/Testimonial");
+const Bank = require("../models/Bank");
+const { validationResult } = require("express-validator");
+const fs = require("fs-extra");
+const path = require("path");
+
+const removeImage = (filePath) => {
+  filePath = path.join(__dirname, "../public", filePath);
+  fs.unlink(filePath);
+};
 
 module.exports = {
   landingPage: async (req, res) => {
@@ -52,7 +61,54 @@ module.exports = {
         testimonial,
       });
     } catch (error) {
-      console.log(error);
+      res.status(500).json({ message: "internal server Eror" });
     }
+  },
+
+  detailPage: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const item = await Item.findOne({ _id: id })
+        .populate({ path: "featureId", select: "_id name qty imageUrl" })
+        .populate({ path: "activityId", select: "_id name type imageUrl" })
+        .populate({ path: "imageId", select: "_id imageUrl" });
+      const bank = await Bank.find();
+      const testimonial = await Testimonial.find();
+
+      res.status(200).json({
+        ...item._doc,
+        bank,
+        testimonial,
+      });
+    } catch (error) {
+      res.status(500).json({ message: "internal server Eror" });
+    }
+  },
+
+  bookingPage: async (req, res) => {
+    const {
+      idItem,
+      duration,
+      bookingDateStart,
+      bookingDateEnd,
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      accountHolder,
+      bankFrom,
+    } = req.body;
+    if (!req.file) {
+      return res.status(404).json({ message: "image not found" });
+    }
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      removeImage(`images/${req.file.filename}`);
+      return res
+        .status(400)
+        .json({ message: "Invalid Input", data: errors.array() });
+    }
+
+    res.status(201).json({ message: "succes booking" });
   },
 };
