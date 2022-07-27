@@ -19,7 +19,7 @@ module.exports = {
         res.redirect("/admin");
       }
     } catch (error) {
-      res.redirect("/login");
+      res.redirect("/auth/login");
     }
   },
   actionLogin: async (req, res) => {
@@ -29,13 +29,13 @@ module.exports = {
       if (!user) {
         req.flash("alertMessage", "User Not Found");
         req.flash("alertStatus", "danger");
-        res.redirect("/login");
+        res.redirect("/auth/login");
       } else {
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         if (!isPasswordMatch) {
           req.flash("alertMessage", "Worng Password");
           req.flash("alertStatus", "danger");
-          res.redirect("/login");
+          res.redirect("/auth/login");
         } else {
           req.session.user = {
             id: user._id,
@@ -47,14 +47,14 @@ module.exports = {
     } catch (error) {
       req.flash("alertMessage", `${error.message}`);
       req.flash("alertStatus", "danger");
-      res.redirect("/login");
+      res.redirect("/auth/login");
     }
   },
 
   actionLogout: async (req, res) => {
     try {
       req.session.destroy();
-      res.redirect("/login");
+      res.redirect("/auth/login");
     } catch (error) {
       req.flash("alertMessage", `${error.message}`);
       req.flash("alertStatus", "danger");

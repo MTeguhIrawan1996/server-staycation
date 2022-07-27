@@ -1,11 +1,9 @@
-const router = require("express").Router();
-const loginController = require("../controllers/loginController");
-const auth = require("../middlewares/auth");
+var express = require("express");
+var router = express.Router();
 
-router.get("/", loginController.viewLogin);
-router.get("/login", loginController.viewLogin);
-router.post("/login", loginController.actionLogin);
-router.get("/logout", loginController.actionLogout);
-router.use(auth);
+/* GET home page. */
+router.get("/", function (req, res, next) {
+  res.redirect("/auth");
+});
 
 module.exports = router;

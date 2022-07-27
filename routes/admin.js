@@ -1,7 +1,9 @@
 const router = require("express").Router();
 const adminController = require("../controllers/adminController");
 const { upload, uploadMultiple } = require("../middlewares/multer");
+const auth = require("../middlewares/auth");
 
+router.use(auth);
 router.get("/", adminController.viewDashboard);
 router.get("/dashboard", adminController.viewDashboard);
 
