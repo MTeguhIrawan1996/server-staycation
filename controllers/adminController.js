@@ -552,7 +552,7 @@ module.exports = {
         req.flash("alertStatus", "danger");
         res.redirect(`/admin/item/show-detail-item/${itemId}`);
       } else {
-        if (req.file.size > 1 * 1024 * 1024) {
+        if (req.file.size > 6 * 1024 * 1024) {
           removeImage(`images/${req.file.filename}`);
           req.flash("alertMessage", "Worng Image Size");
           req.flash("alertStatus", "danger");

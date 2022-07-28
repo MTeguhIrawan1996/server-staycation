@@ -3,7 +3,7 @@ var mongoose = require("mongoose");
 
 // Connect to MongoDB via Mongoose
 seeder.connect(
-  "mongodb://localhost:27017/db_staycation",
+  "mongodb://onedev:CCZ1aycFC3ZLXOtw@ac-uhslq4o-shard-00-00.fxyat2f.mongodb.net:27017,ac-uhslq4o-shard-00-01.fxyat2f.mongodb.net:27017,ac-uhslq4o-shard-00-02.fxyat2f.mongodb.net:27017/db_staycation?ssl=true&replicaSet=atlas-82jsad-shard-0&authSource=admin&retryWrites=true&w=majority",
   {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -12,10 +12,10 @@ seeder.connect(
   },
   function () {
     // Load Mongoose models
-    seeder.loadModels(["./models/Testimonial"]);
+    seeder.loadModels(["./models/User"]);
 
     // Clear specified collections
-    seeder.clearModels(["Testimonial"], function () {
+    seeder.clearModels(["User"], function () {
       // Callback to populate DB once collections have been cleared
       seeder.populateModels(data, function () {
         seeder.disconnect();
@@ -25,18 +25,13 @@ seeder.connect(
 );
 
 var data = [
-  // start booking
   {
-    model: "Testimonial",
+    model: "User",
     documents: [
       {
-        _id: mongoose.Types.ObjectId("5e96cbe292b97300fc90cbb1"),
-        name: "Happy Family",
-        familyName: "Bowo",
-        familyOccupation: "UX/UX",
-        content: "Great Trip",
-        rate: 4.55,
-        imageUrl: "images/testimonial2.jpg",
+        _id: mongoose.Types.ObjectId("5e96cbe292b97300fc903345"),
+        username: "admin",
+        password: "rahasia",
       },
     ],
   },

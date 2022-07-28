@@ -7,10 +7,11 @@ const methodOverride = require("method-override");
 const session = require("express-session");
 const flash = require("connect-flash");
 const moment = require("moment");
+require("dotenv").config();
 
 // Import Mongoose
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost:27017/db_staycation", {
+mongoose.connect(process.env.URL_DB, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
