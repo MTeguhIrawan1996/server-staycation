@@ -4,6 +4,8 @@ const Traveler = require("../models/Booking");
 const Category = require("../models/Category");
 const Testimonial = require("../models/Testimonial");
 const Bank = require("../models/Bank");
+const Member = require("../models/Member");
+const Booking = require("../models/Booking");
 const { validationResult } = require("express-validator");
 const fs = require("fs-extra");
 const path = require("path");
@@ -49,7 +51,6 @@ module.exports = {
         }
       }
       const testimonial = await Testimonial.find();
-
       res.status(200).json({
         hero: {
           traveler: traveler.length,
@@ -89,8 +90,8 @@ module.exports = {
     const {
       idItem,
       duration,
-      bookingDateStart,
-      bookingDateEnd,
+      bookingStartDate,
+      bookingEndDate,
       firstName,
       lastName,
       email,
@@ -109,6 +110,43 @@ module.exports = {
         .json({ message: "Invalid Input", data: errors.array() });
     }
 
-    res.status(201).json({ message: "succes booking" });
+    const item = await Item.findOne({ _id: idItem });
+    if (!item) {
+      removeImage(`images/${req.file.filename}`);
+      return res.status(404).json({ message: "Item not found" });
+    }
+    item.sumBooking += 1;
+    await item.save();
+
+    let total = item.price * duration;
+    let tax = total * 0.1;
+    const invoice = Math.floor(1000000 + Math.random() * 9000000);
+    const member = await Member.create({
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+    });
+    const newBooking = {
+      invoice,
+      bookingStartDate,
+      bookingEndDate,
+      total: (total += tax),
+      itemId: {
+        _id: item.id,
+        price: item.price,
+        title: item.title,
+        duration: duration,
+      },
+      memberId: member.id,
+      payments: {
+        proofPayment: `images/${req.file.filename}`,
+        bankFrom,
+        accountHolder,
+      },
+    };
+    const booking = await Booking.create(newBooking);
+
+    res.status(201).json({ message: "succes booking", booking });
   },
 };

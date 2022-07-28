@@ -11,10 +11,10 @@ router.post(
   [
     body("idItem").isLength({ min: 5 }).withMessage("Input tidak sesuai"),
     body("duration").isLength({ min: 1 }).withMessage("Input tidak sesuai"),
-    body("bookingDateStart")
+    body("bookingStartDate")
       .isLength({ min: 5 })
       .withMessage("Input tidak sesuai"),
-    body("bookingDateEnd")
+    body("bookingEndDate")
       .isLength({ min: 5 })
       .withMessage("Input tidak sesuai"),
     body("firstName").isLength({ min: 3 }).withMessage("Input tidak sesuai"),

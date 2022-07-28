@@ -9,10 +9,10 @@
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>Invoice</th>
                         <th>Date</th>
                         <th>Item</th>
                         <th>Member</th>
-                        <th>Bank</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -21,11 +21,11 @@
                     <% for(let i = 0; i < booking.length; i++) {%>
                     <tr>
                         <td><%= i +1 %> </td>
+                        <td>#<%= booking[i].invoice %></td>
                         <td><%= moment(booking[i].bookingStartDate).format('DD-MMM-YYYY') %> s/d
                             <%= moment(booking[i].bookingEndDate).format('DD-MMM-YYYY') %></td>
                         <td><%= booking[i].itemId.title %></td>
                         <td><%= booking[i].memberId.firstName %> <%= booking[i].memberId.lastName %></td>
-                        <td><%= booking[i].bankId.nameBank %></td>
                         <td><%= booking[i].payments.status %></td>
                         <td>
                             <a href="/admin/booking/<%= booking[i].id %>" class="btn btn-success btn-circle btn-sm"><i
