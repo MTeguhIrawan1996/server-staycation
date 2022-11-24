@@ -55,7 +55,7 @@ app.use(
   express.static(path.join(__dirname, "node_modules/startbootstrap-sb-admin-2"))
 );
 
-app.use("/", indexRouter);
+app.get("/", (req, res) => res.json({ message: "Welcome to Marketplace API" }));
 // app.use("/users", usersRouter);
 
 // admin
