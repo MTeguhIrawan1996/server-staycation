@@ -11,15 +11,12 @@ require("dotenv").config();
 
 // Import Mongoose
 const mongoose = require("mongoose");
-mongoose.connect(
-  "mongodb://onedev:CCZ1aycFC3ZLXOtw@ac-uhslq4o-shard-00-00.fxyat2f.mongodb.net:27017,ac-uhslq4o-shard-00-01.fxyat2f.mongodb.net:27017,ac-uhslq4o-shard-00-02.fxyat2f.mongodb.net:27017/db_staycation?ssl=true&replicaSet=atlas-82jsad-shard-0&authSource=admin&retryWrites=true&w=majority",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-  }
-);
+mongoose.connect(process.env.DB_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+});
 
 var indexRouter = require("./routes/index");
 // var usersRouter = require("./routes/users");

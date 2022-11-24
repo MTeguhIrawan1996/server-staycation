@@ -8,6 +8,7 @@ const Booking = require("../models/Booking");
 const Member = require("../models/Member");
 const fs = require("fs-extra");
 const path = require("path");
+const baseURL = process.env.BASE_URL;
 
 const removeImage = (filePath) => {
   filePath = path.join(__dirname, "../public", filePath);
@@ -113,6 +114,7 @@ module.exports = {
         page: "Bank",
         title: "Stycation | Bank",
         user: req.session.user,
+        baseURL,
       });
     } catch (error) {
       res.redirect("/admin/bank");
@@ -199,6 +201,7 @@ module.exports = {
         category,
         alert,
         item,
+        baseURL,
         action: "view",
         user: req.session.user,
       });
@@ -261,6 +264,7 @@ module.exports = {
         item,
         alert,
         action: "show image",
+        baseURL,
         feature,
         activity,
         user: req.session.user,
@@ -297,6 +301,7 @@ module.exports = {
         item,
         alert,
         category,
+        baseURL,
         action: "edit",
         user: req.session.user,
       });
@@ -645,6 +650,7 @@ module.exports = {
         title: "Stycation | Booking",
         user: req.session.user,
         booking,
+        baseURL,
       });
     } catch (error) {
       res.redirect(`/admin/booking`);

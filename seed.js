@@ -3,7 +3,7 @@ var mongoose = require("mongoose");
 
 // Connect to MongoDB via Mongoose
 seeder.connect(
-  "mongodb://onedev:CCZ1aycFC3ZLXOtw@ac-uhslq4o-shard-00-00.fxyat2f.mongodb.net:27017,ac-uhslq4o-shard-00-01.fxyat2f.mongodb.net:27017,ac-uhslq4o-shard-00-02.fxyat2f.mongodb.net:27017/db_staycation?ssl=true&replicaSet=atlas-82jsad-shard-0&authSource=admin&retryWrites=true&w=majority",
+  process.env.DB_URL,
   {
     useNewUrlParser: true,
     useCreateIndex: true,

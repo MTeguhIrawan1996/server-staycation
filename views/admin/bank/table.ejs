@@ -25,8 +25,8 @@
                         <td><%= bank[i].nameBank %> </td>
                         <td><%= bank[i].nomorRekening %> </td>
                         <td><%= bank[i].name %> </td>
-                        <td><img src="https://web-production-0998.up.railway.app/<%= bank[i].imageUrl  %> "
-                                class="img-fluid img-thumbnail" alt="imageUrl" height="70px" width="70px"> </td>
+                        <td><img src="<%= baseURL+bank[i].imageUrl  %>" class="img-fluid img-thumbnail" alt="imageUrl"
+                                height="70px" width="70px"> </td>
                         <td>
                             <form action="/admin/bank/<%= bank[i].id %>?_method=DELETE " method="POST">
                                 <a href="javascript:void()" type="button"
